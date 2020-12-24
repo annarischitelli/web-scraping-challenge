@@ -32,8 +32,8 @@
       <div class="col-md-12">
         <h3 class="box-header">Latest Mars News</h3>
         <hr>
-        <h6>{{mars_data.title}}</h6>
-        <p>{{mars_data.paragraph}}</p>
+        <h6>{{ mars_data.title }}</h6>
+        <p>{{ mars_data.paragraph }}</p>
       </div>
     </div>
   </div>
@@ -47,7 +47,7 @@
       <div class="col-md-7">
         <h3 class="box-header">Featured Mars Image</h3>
         <hr>
-        <img src={{ mars_data.featured_image_url }} alt="Featured Mars Image" class="comparison-main-image" class="image"/>
+        <a href="https://www.jpl.nasa.gov/spaceimages/?search=&category=Mars//spaceimages/images/mediumsize/PIA22892_ip.jpg"></a><img src={{ mars_data.featured_image_url }} alt="Featured Mars Image" class="comparison-main-image" class="image"/>
       </div>
 <!-- End Featured Mars Image -->
 
@@ -66,15 +66,32 @@
 
 <!-- Mars Hemisphere Images -->
 <div class="container">
-    <div class="jumbotron text-center">
-      <h3 class="box-header">Mars Hemispheres</h3>
-      <hr>
-        <img src={{ mars_data.marineris_image_url }} class="viz-image" alt="Valles Marineris Hemisphere"></a>
-        <img src={{ mars_data.cerberus_image_url }} class="viz-image" alt="Cerebus Hemisphere"></a>
-        <img src={{mars_data.shiaparelli_image_url}} class="viz-image" alt="Shiaparelli Hemisphere"></a>
-        <img src={{mars_data.syrtis_image_url}}  class="viz-image" alt="Syrtis Hemisphere"></a>
-      </hr>
+  <h2>Mars Hemispheres</h2>
+  <hr>
+  <div class="row">
+    <div class="col-md-6 col-md-3">
+      <th>
+        <img src={{ mars_data.marineris_image_url }} class="img-fluid" style="max-width: 100%; max-height: auto;"alt="Cerberus image">
+        <h6> {{ mars_data.marineris_title }}</h6>  
+      </th>
     </div>
+    <div class="col-md-6 col-md-3">  
+      <th>
+        <img src={{ mars_data.cerberus_image_url }}  class="img-fluid" style="max-width: 100%; max-height: auto;"alt="Marineris image">
+        <h6> {{ mars_data.cerberus_title }}</h6>
+      </th>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6 col-md-3">
+      <img src={{ mars_data.shiaparelli_image_url }}  class="img-fluid" style="max-width: 100%; max-height: auto;"alt="Shiaparelli image">
+      <h6> {{ mars_data.shiaparelli_title }}</h6>
+    </div>
+    <div class="col-md-6 col-md-3">
+        <img src={{ mars_data.syrtis_image_url }} aclass="img-fluid" style="max-width: 100%; max-height: auto;"alt="Syrtis image">
+        <h6>{{ mars_data.syrtis_title }}</h6>
+    </div>
+  </div>
 </div>
 <!-- End Mars Hemisphere Images -->
 
