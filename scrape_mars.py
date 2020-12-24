@@ -1,12 +1,6 @@
-#!/usr/bin/env python
-# coding: utf-8
-
 import pandas as pd
 from splinter import Browser
 from bs4 import BeautifulSoup
-
-
-# ## Scrape for Mars News
 
 executable_path = {'executable_path': '/usr/local/bin/chromedriver'}
 browser = Browser('chrome', **executable_path, headless=False)
@@ -18,7 +12,6 @@ html = browser.html
 soup = BeautifulSoup(html, 'html.parser')
 item = soup.find('li', class_='slide')
 
-
 #Pulling headlines using 2/Activites/02
 title = item.find('div', class_="content_title").find('a').text
 paragraph = item.find('div', class_='rollover_description_inner').text
@@ -26,9 +19,6 @@ print(title,paragraph)
 
 #Quit browser
 browser.quit()
-
-
-# ## Scrape for Mars Image 
 
 executable_path = {'executable_path': '/usr/local/bin/chromedriver'}
 browser = Browser('chrome', **executable_path, headless=False)
@@ -49,29 +39,15 @@ print(featured_image_url)
 #Quit browser
 browser.quit()
 
-
-# ## Scrape for Mars Facts
-
 url = "https://space-facts.com/mars/"
 
 tables = pd.read_html(url)
-tables
-
-type(tables)
 
 df = tables[0]
 df.head()
 
-#Dataframe to HTML
 html_table = df.to_html()
-html_table
-
 df.to_html('table.html')
-
-get_ipython().system('open table.html')
-
-
-# ## Scrape Mars Hemispheres
 
 #Find title and image URL to VALLES MARINERIS Hemisphere 
 executable_path = {'executable_path': '/usr/local/bin/chromedriver'}
@@ -93,7 +69,6 @@ print(marineris_title, marineris_image_url)
 #Quit browser
 browser.quit()
 
-
 #Find title and image URL to Mars CEREBUS Hemisphere 
 executable_path = {'executable_path': '/usr/local/bin/chromedriver'}
 browser = Browser('chrome', **executable_path, headless=False)
@@ -113,7 +88,6 @@ print(cerberus_title,cerberus_image_url)
 
 #Quit browser
 browser.quit()
-
 
 #Find title and image URL to Mars SHIAPARELLI Hemisphere 
 executable_path = {'executable_path': '/usr/local/bin/chromedriver'}
@@ -135,7 +109,6 @@ print(shiaparelli_title, shiaparelli_image_url)
 #Quit browser
 browser.quit()
 
-
 #Find title and image URL to Mars SYRTIS MAJOR Hemisphere 
 executable_path = {'executable_path': '/usr/local/bin/chromedriver'}
 browser = Browser('chrome', **executable_path, headless=False)
@@ -156,7 +129,6 @@ print(syrtis_title, syrtis_image_url)
 #Quit browser
 browser.quit()
 
-
 #Example code
 hemisphere_image_urls = [
     {"title": "Valles Marineris Hemisphere", "img_url": marineris_image_url},
@@ -168,4 +140,3 @@ print(hemisphere_image_urls)
 
 #Quit browser
 browser.quit()
-

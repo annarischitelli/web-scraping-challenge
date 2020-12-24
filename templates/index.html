@@ -23,7 +23,7 @@
     <div class="jumbotron text-center">
       <h1>Mission to Mars</h1>
       <br>
-      <p><a class="btn btn-primary btn-lg" href="/scrape" role="button">Refresh Mars Data</a></p>
+      <p><a class="btn btn-primary btn-lg" href="/scrape" role="button">Collect Recent Mars Data</a></p>
     </div>
 
 <!-- Latest Mars News -->
@@ -32,6 +32,8 @@
       <div class="col-md-12">
         <h3 class="box-header">Latest Mars News</h3>
         <hr>
+        <h6>{{mars_data.title}}</h6>
+        <p>{{mars_data.paragraph}}</p>
       </div>
     </div>
   </div>
@@ -45,7 +47,7 @@
       <div class="col-md-7">
         <h3 class="box-header">Featured Mars Image</h3>
         <hr>
-        <img src="Resources/Fig1_Lat_v_Temp.png" alt="Featured Mars Image" class="comparison-main-image" class="image"/>
+        <img src={{ mars_data.featured_image_url }} alt="Featured Mars Image" class="comparison-main-image" class="image"/>
       </div>
 <!-- End Featured Mars Image -->
 
@@ -67,10 +69,10 @@
     <div class="jumbotron text-center">
       <h3 class="box-header">Mars Hemispheres</h3>
       <hr>
-        <a href="temp.html"><img src= {{  }} class="viz-image" alt="Valles Marineris Hemisphere"></a>
-        <a href="humidity.html"><img src="Resources/Fig2_Lat_v_Humid.png" class="viz-image" alt="Cerebus Hemisphere"></a>
-        <a href="cloudiness.html"><img src="Resources/Fig3_Lat_v_Cloudi.png" class="viz-image" alt="Shiaparelli Hemisphere"></a>
-        <a href="wind.html"><img src="Resources/Fig4_Lat_v_Wind.png" class="viz-image" alt="Syrtis Hemisphere"></a>
+        <img src={{ mars_data.marineris_image_url }} class="viz-image" alt="Valles Marineris Hemisphere"></a>
+        <img src={{ mars_data.cerberus_image_url }} class="viz-image" alt="Cerebus Hemisphere"></a>
+        <img src={{mars_data.shiaparelli_image_url}} class="viz-image" alt="Shiaparelli Hemisphere"></a>
+        <img src={{mars_data.syrtis_image_url}}  class="viz-image" alt="Syrtis Hemisphere"></a>
       </hr>
     </div>
 </div>
