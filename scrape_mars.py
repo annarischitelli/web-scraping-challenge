@@ -1,142 +1,192 @@
 import pandas as pd
 from splinter import Browser
 from bs4 import BeautifulSoup
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+import time
 
-executable_path = {'executable_path': '/usr/local/bin/chromedriver'}
-browser = Browser('chrome', **executable_path, headless=False)
 
-url = "https://mars.nasa.gov/news/"
-browser.visit(url)
+def init_browser():
+    # @NOTE: Replace the path with your actual path to the chromedriver
+    executable_path = {"executable_path":'/usr/local/bin/chromedriver'}
+    return Browser("chrome", **executable_path, headless=False)
 
-html = browser.html
-soup = BeautifulSoup(html, 'html.parser')
-item = soup.find('li', class_='slide')
+def scrape():
+    mars_dict = {
+        'title': " ",
+        'paragraph': " ",
+        'featured_image_url': " ",
+        'html_table': " ",
+        'marineris_title': " " , 
+        'marineris_image_url': " ",
+        'cerberus_title': " " , 
+        'cerberus_image_url': " ",
+        'shiaparelli_title': " " , 
+        'shiaparelli_image_url': " ",
+        'syrtis_title': " " , 
+        'syrtis_image_url': " " 
+    }
+    titleparagraph = mars_titleparagraph()
+    mars_dict['title'] = titleparagraph[0]
+    mars_dict['paragraph'] = titleparagraph[1]
+    mars_dict['featured_image_url'] = featured_image()
+    marineris = marineristitleimage()
+    mars_dict['marineris_title'] = marineristitleimage[0]
+    mars_dict['marineris_image_url'] = marineristitleimage[1]
+    return mars_dict
 
-#Pulling headlines using 2/Activites/02
-title = item.find('div', class_="content_title").find('a').text
-paragraph = item.find('div', class_='rollover_description_inner').text
-print(title,paragraph)
+def mars_titleparagraph():
+    browser = init_browser()
+    url = "https://mars.nasa.gov/news/"
+    browser.visit(url)
+    html = browser.html
+    soup = BeautifulSoup(html, 'html.parser')
+    item = soup.find('li', class_='slide')
+    title = item.find('div', class_="content_title").find('a').text
+    paragraph = item.find('div', class_='rollover_description_inner').text
+    browser.quit()
+    return title, paragraph
 
-#Quit browser
-browser.quit()
+def featured_image():
+    browser = init_browser()
+    url = "https://www.jpl.nasa.gov/spaceimages/?search=&category=Mars/"
+    browser.visit(url)
+    html = browser.html
+    soup = BeautifulSoup(html, 'html.parser')
+    image_url = soup.find('article', class_='carousel_item').find('a', class_="button fancybox")['data-fancybox-href']
+    featured_image_url = 'https://www.jpl.nasa.gov' + image_url
+    browser.quit()
+    return featured_image_url
 
-executable_path = {'executable_path': '/usr/local/bin/chromedriver'}
-browser = Browser('chrome', **executable_path, headless=False)
+def marineristitleimage():
+    browser = init_browser()
+    marineris_url = "https://astrogeology.usgs.gov/search/map/Mars/Viking/valles_marineris_enhanced"
+    browser.visit(marineris_url)
+    html = browser.html
+    soup = BeautifulSoup(html, 'html.parser')
+    marineris_title  = soup.find('h2', class_='title').text
+    marineris_image_url = soup.find('div', class_='downloads').find('a')["href"]
+    browser.quit()
+    return marineris_title, marineris_image_url
 
-url = "https://www.jpl.nasa.gov/spaceimages/?search=&category=Mars/"
-browser.visit(url)
+# executable_path = {'executable_path': '/usr/local/bin/chromedriver'}
+# browser = Browser('chrome', **executable_path, headless=False)
 
-html = browser.html
-soup = BeautifulSoup(html, 'html.parser')
+# url = "https://mars.nasa.gov/news/"
+# browser.visit(url)
 
-#Pulling image using 2/Activites/09
-image_url = soup.find('article', class_='carousel_item').find('a', class_="button fancybox")['data-fancybox-href']
-featured_image_url = url + image_url
+# html = browser.html
+# soup = BeautifulSoup(html, 'html.parser')
+# item = soup.find('li', class_='slide')
 
-#Return image URL
-print(featured_image_url)
+# #Pulling headlines using 2/Activites/02
+# title = item.find('div', class_="content_title").find('a').text
+# paragraph = item.find('div', class_='rollover_description_inner').text
+# # print(title,paragraph)
 
-#Quit browser
-browser.quit()
+# executable_path = {'executable_path': '/usr/local/bin/chromedriver'}
+# browser = Browser('chrome', **executable_path, headless=False)
 
-url = "https://space-facts.com/mars/"
+# url = "https://www.jpl.nasa.gov/spaceimages/?search=&category=Mars/"
+# browser.visit(url)
 
-tables = pd.read_html(url)
+# html = browser.html
+# soup = BeautifulSoup(html, 'html.parser')
 
-df = tables[0]
-df.head()
+# #Pulling image using 2/Activites/09
+# image_url = soup.find('article', class_='carousel_item').find('a', class_="button fancybox")['data-fancybox-href']
+# featured_image_url = url + image_url
 
-html_table = df.to_html()
-df.to_html('table.html')
+# #Return image URL
+# # print(featured_image_url)
 
-#Find title and image URL to VALLES MARINERIS Hemisphere 
-executable_path = {'executable_path': '/usr/local/bin/chromedriver'}
-browser = Browser('chrome', **executable_path, headless=False)
 
-marineris_url = "https://astrogeology.usgs.gov/search/map/Mars/Viking/valles_marineris_enhanced"
-browser.visit(marineris_url)
+# url = "https://space-facts.com/mars/"
 
-html = browser.html
-soup = BeautifulSoup(html, 'html.parser')
+# tables = pd.read_html(url)
 
-#Pull specific info for hemi
-marineris_title  = soup.find('h2', class_='title').text
-marineris_image_url = soup.find('div', class_='downloads').find('a')["href"]
+# df = tables[0]
+# df.head()
 
-#Title + Image together
-print(marineris_title, marineris_image_url)
+# html_table = df.to_html()
+# df.to_html('table.html')
 
-#Quit browser
-browser.quit()
+# #Find title and image URL to VALLES MARINERIS Hemisphere 
+# executable_path = {'executable_path': '/usr/local/bin/chromedriver'}
+# browser = Browser('chrome', **executable_path, headless=False)
 
-#Find title and image URL to Mars CEREBUS Hemisphere 
-executable_path = {'executable_path': '/usr/local/bin/chromedriver'}
-browser = Browser('chrome', **executable_path, headless=False)
+# marineris_url = "https://astrogeology.usgs.gov/search/map/Mars/Viking/valles_marineris_enhanced"
+# browser.visit(marineris_url)
 
-cerebus_url = "https://astrogeology.usgs.gov/search/map/Mars/Viking/cerberus_enhanced"
-browser.visit(cerebus_url)
+# html = browser.html
+# soup = BeautifulSoup(html, 'html.parser')
 
-html = browser.html
-soup = BeautifulSoup(html, 'html.parser')
+# #Pull specific info for hemi
+# marineris_title  = soup.find('h2', class_='title').text
+# marineris_image_url = soup.find('div', class_='downloads').find('a')["href"]
 
-#Pull specific info for hemi
-cerberus_title = soup.find('h2', class_='title').text
-cerberus_image_url = soup.find('div', class_='downloads').find('a')["href"]
+# #Title + Image together
+# # print(marineris_title, marineris_image_url)
 
-#Title + Image together
-print(cerberus_title,cerberus_image_url)
+# #Find title and image URL to Mars CEREBUS Hemisphere 
+# executable_path = {'executable_path': '/usr/local/bin/chromedriver'}
+# browser = Browser('chrome', **executable_path, headless=False)
 
-#Quit browser
-browser.quit()
+# cerebus_url = "https://astrogeology.usgs.gov/search/map/Mars/Viking/cerberus_enhanced"
+# browser.visit(cerebus_url)
 
-#Find title and image URL to Mars SHIAPARELLI Hemisphere 
-executable_path = {'executable_path': '/usr/local/bin/chromedriver'}
-browser = Browser('chrome', **executable_path, headless=False)
+# html = browser.html
+# soup = BeautifulSoup(html, 'html.parser')
 
-shiaparelli_url = "https://astrogeology.usgs.gov/search/map/Mars/Viking/schiaparelli_enhanced"
-browser.visit(shiaparelli_url)
+# #Pull specific info for hemi
+# cerberus_title = soup.find('h2', class_='title').text
+# cerberus_image_url = soup.find('div', class_='downloads').find('a')["href"]
 
-html = browser.html
-soup = BeautifulSoup(html, 'html.parser')
+# #Title + Image together
+# # print(cerberus_title,cerberus_image_url)
 
-#Pull specific info for hemi
-shiaparelli_title  = soup.find('h2', class_='title').text
-shiaparelli_image_url = soup.find('div', class_='downloads').find('a')["href"]
+# #Find title and image URL to Mars SHIAPARELLI Hemisphere 
+# executable_path = {'executable_path': '/usr/local/bin/chromedriver'}
+# browser = Browser('chrome', **executable_path, headless=False)
 
-#Title + Image together
-print(shiaparelli_title, shiaparelli_image_url)
+# shiaparelli_url = "https://astrogeology.usgs.gov/search/map/Mars/Viking/schiaparelli_enhanced"
+# browser.visit(shiaparelli_url)
 
-#Quit browser
-browser.quit()
+# html = browser.html
+# soup = BeautifulSoup(html, 'html.parser')
 
-#Find title and image URL to Mars SYRTIS MAJOR Hemisphere 
-executable_path = {'executable_path': '/usr/local/bin/chromedriver'}
-browser = Browser('chrome', **executable_path, headless=False)
+# #Pull specific info for hemi
+# shiaparelli_title  = soup.find('h2', class_='title').text
+# shiaparelli_image_url = soup.find('div', class_='downloads').find('a')["href"]
 
-syrtis_url = "https://astrogeology.usgs.gov/search/map/Mars/Viking/syrtis_major_enhanced"
-browser.visit(syrtis_url)
+# #Title + Image together
+# # print(shiaparelli_title, shiaparelli_image_url)
 
-html = browser.html
-soup = BeautifulSoup(html, 'html.parser')
+# #Find title and image URL to Mars SYRTIS MAJOR Hemisphere 
+# executable_path = {'executable_path': '/usr/local/bin/chromedriver'}
+# browser = Browser('chrome', **executable_path, headless=False)
 
-#Pull specific info for hemi
-syrtis_title  = soup.find('h2', class_='title').text
-syrtis_image_url = soup.find('div', class_='downloads').find('a')["href"]
+# syrtis_url = "https://astrogeology.usgs.gov/search/map/Mars/Viking/syrtis_major_enhanced"
+# browser.visit(syrtis_url)
 
-#Title + Image together
-print(syrtis_title, syrtis_image_url)
+# html = browser.html
+# soup = BeautifulSoup(html, 'html.parser')
 
-#Quit browser
-browser.quit()
+# #Pull specific info for hemi
+# syrtis_title  = soup.find('h2', class_='title').text
+# syrtis_image_url = soup.find('div', class_='downloads').find('a')["href"]
 
-#Example code
-hemisphere_image_urls = [
-    {"title": "Valles Marineris Hemisphere", "img_url": marineris_image_url},
-    {"title": "Cerberus Hemisphere", "img_url": cerberus_image_url},
-    {"title": "Schiaparelli Hemisphere", "img_url": shiaparelli_image_url},
-    {"title": "Syrtis Major Hemisphere", "img_url": syrtis_image_url},
-]
-print(hemisphere_image_urls)
+# #Title + Image together
+# # print(syrtis_title, syrtis_image_url)
 
-#Quit browser
-browser.quit()
+# #Example code
+# hemisphere_image_urls = [
+#     {"title": "Valles Marineris Hemisphere", "img_url": marineris_image_url},
+#     {"title": "Cerberus Hemisphere", "img_url": cerberus_image_url},
+#     {"title": "Schiaparelli Hemisphere", "img_url": shiaparelli_image_url},
+#     {"title": "Syrtis Major Hemisphere", "img_url": syrtis_image_url},
+# ]
+# # print(hemisphere_image_urls)
+
+# #Quit browser
+# browser.quit()
